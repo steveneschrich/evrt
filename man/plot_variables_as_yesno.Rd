@@ -10,13 +10,16 @@ plot_variables_as_yesno(
   by = NULL,
   default_wrap_length = 35,
   threshold = "",
-  title = ""
+  title = "",
+  col = c("#4F81BD", "#FAAB18", "#868686FF", "#CD534CFF")
 )
 }
 \arguments{
 \item{x}{A table of variables}
 
 \item{title}{A title for the plot}
+
+\item{col}{Colors for the plot}
 }
 \value{
 

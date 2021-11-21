@@ -6,7 +6,7 @@
 #' @param default_wrap_length
 #' @param threshold
 #' @param title A title for the plot
-#'
+#' @param col Colors for the plot
 #' @return
 #' @export
 #'
@@ -16,13 +16,15 @@ plot_variables_as_numeric <- function(x,
                                         by=NULL,
                                         default_wrap_length = 35,
                                         threshold = 3,
-                                        title = "") {
+                                        title = "",
+                                        col = c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
+) {
 
   if (!is.null(by)) by <- rlang::ensym(by)
   # Wrap the labels to a reasonable width for printing
   x<-x %>% dplyr::mutate(label = fct_wrap(label, 35))
-  default_fill <- "#1380A1"
-  default_fill <- "#4F81BD"
+  #default_fill <- "#1380A1"
+  #default_fill <- "#4F81BD"
 
   # From the dictionary, get all factor levels of the variable(s).
   factor_levels <- NULL
@@ -42,13 +44,13 @@ plot_variables_as_numeric <- function(x,
   }  else {
     g <- g +
       ggplot2::geom_errorbar(width=0.2, size = 1) +
-      ggplot2::geom_bar(stat = "identity", fill = default_fill)
+      ggplot2::geom_bar(stat = "identity", fill = col[1])
   }
-
+#c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
   g<- g +
     ggplot2::geom_hline(yintercept = 0, size = 1, colour="#333333") +
-    ggplot2::scale_fill_manual(values =  c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF"),
-                               guide = ggplot2::guide_legend(reverse=TRUE)) +
+    ggplot2::scale_fill_manual(values =  col) +#,
+#                               guide = ggplot2::guide_legend(reverse=TRUE)) +
     ggplot2::geom_vline(xintercept = threshold, linetype = "dashed") +
     ggplot2::labs(caption= factor_levels, title = title) +
     ggplot2::ylab("") +
@@ -73,7 +75,7 @@ plot_variables_as_numeric <- function(x,
 #' @param by
 #' @param default_wrap_length
 #' @param title A title for the plot
-#'
+#' @param col Colors for the plot
 #' @return
 #' @export
 #'
@@ -83,7 +85,9 @@ plot_variables_as_threshold<- function(x,
                                        by=NULL,
                                        default_wrap_length = 35,
                                        threshold = "",
-                                       title = "Response") {
+                                       title = "Response",
+                                       col = c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
+) {
   # This is magic to turn string to expression, or leave as expression.
   if (!is.null(by)) by <- rlang::ensym(by)
   # x has count, n and percent. label gives the info.
@@ -104,15 +108,15 @@ plot_variables_as_threshold<- function(x,
   # ggplot2::geom_bar(stat="identity",position=position_dodge(width=0.9))
   if (is.null(by)) {
     g <- g +
-      ggplot2::geom_bar(stat = "identity",  fill=default_fill)
+      ggplot2::geom_bar(stat = "identity",  fill=col[1])
   }  else {
     g <- g +
       ggplot2::geom_bar(stat="identity",position=ggplot2::position_dodge(width=0.9))
   }
   g<- g +
     ggplot2::geom_hline(yintercept = 0, size = 1, colour="#333333") +
-    ggplot2::scale_fill_manual(values = c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF"),
-                               guide = ggplot2::guide_legend(reverse=TRUE)) +
+    ggplot2::scale_fill_manual(values = col)+#,
+#                               guide = ggplot2::guide_legend(reverse=TRUE)) +
     # Set x scale as percentages (0-100%).
     ggplot2::scale_x_continuous(labels = scales::percent, limits = c(0,1)) +
 
@@ -144,7 +148,7 @@ plot_variables_as_threshold<- function(x,
 #' @param by
 #' @param default_wrap_length
 #' @param title A title for the plot
-#'
+#' @param col Colors for the plot
 #' @return
 #' @export
 #'
@@ -154,7 +158,9 @@ plot_variables_as_yesno<- function(x,
                                        by=NULL,
                                        default_wrap_length = 35,
                                        threshold = "",
-                                       title = "") {
+                                       title = "",
+                                       col = c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
+) {
   # This is magic to turn string to expression, or leave as expression.
   if (!is.null(by)) by <- ensym(by)
 
@@ -173,15 +179,15 @@ plot_variables_as_yesno<- function(x,
   # ggplot2::geom_bar(stat="identity",position=position_dodge(width=0.9))
   if (is.null(by)) {
     g <- g +
-      ggplot2::geom_bar(stat = "identity",  fill=default_fill)
+      ggplot2::geom_bar(stat = "identity",  fill=col[1])
   }  else {
     g <- g +
       ggplot2::geom_bar(stat="identity",position=ggplot2::position_dodge(width=0.9))
   }
   g<- g +
     ggplot2::geom_hline(yintercept = 0, size = 1, colour="#333333") +
-    ggplot2::scale_fill_manual(values =  c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF"),
-                               guide = ggplot2::guide_legend(reverse=TRUE)) +
+    ggplot2::scale_fill_manual(values =  col) + #,
+  #                             guide = ggplot2::guide_legend(reverse=TRUE)) +
     ggplot2::scale_x_continuous(labels = scales::percent) +
     # Dont do this, put in the top the percent repsondents exceeding threhsold (somewhere)
     ggplot2::labs(title = title,

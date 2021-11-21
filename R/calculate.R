@@ -142,6 +142,7 @@ format_calculations_for_plotting <- function(x, xorig, vars) {
     dplyr::arrange(.data$i) %>%
     dplyr::select(-.data$i) %>%
     dplyr::mutate(label = factor(.data$label, levels=unique(.data$label)))
+
 }
 
 
