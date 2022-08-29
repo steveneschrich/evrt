@@ -1,3 +1,17 @@
+#' Title
+#'
+#' @param x
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+numeric_flextable <- function(x, ...) {
+  summarize_basic_numeric(x, ...) |>
+    style_basic_as_flextable()
+}
+
 #' Basic numerical summary table
 #'
 #' @param x
