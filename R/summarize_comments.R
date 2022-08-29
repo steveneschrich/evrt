@@ -1,3 +1,18 @@
+#' Title
+#'
+#' @param x
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+comments_flextable <- function(x, ...) {
+  summarize_comments(x, ...) |>
+    style_comments_as_flextable()
+}
+
+
 #' Create a comment table
 #'
 #' @param x
