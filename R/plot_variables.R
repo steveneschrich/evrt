@@ -96,7 +96,7 @@ plot_variables_as_threshold<- function(x,
   n <- x %>% dplyr::select(n) %>% dplyr::distinct() %>% dplyr::pull("n")
   # Wrap the labels to a reasonable width for printing. Note that this
   # bashes the factor so we need to do this intelligently.
-  x<-x %>% dplyr::mutate(label = fct_wrap(.data$label, 35))
+  x<-x %>% dplyr::mutate(label = fct_wrap(.data$label, default_wrap_length))
   default_fill <- "#1380A1"
   default_fill <- "#4F81BD"
   #if (is.null(by)) by <- default_fill
@@ -127,10 +127,11 @@ plot_variables_as_threshold<- function(x,
     # Annotate the plot: this includes
     #  - description of scale in subtitle
     #  - scale in the caption
-    ggplot2::labs(caption=f, title = title,
+    ggplot2::labs(caption=stringr::str_wrap(f, default_wrap_length),
+                  title = stringr::str_wrap(title, default_wrap_length),
                   subtitle = stringr::str_wrap(
                     glue::glue("% Respondents Exceeding '{threshold}' Threshold (N={n})"),
-                    60)) +
+                    default_wrap_length)) +
 
     # Apply standard style for the library
     style_ggplot()
