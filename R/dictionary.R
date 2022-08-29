@@ -13,12 +13,12 @@
 #' @return A string representing the values/labels for a variable.
 #' @export
 #' @importFrom rlang .data
-#' @importFrom magrittr %>%
 #' @examples
 collapse_levels<- function(x) {
-  x %>%
-    dplyr::mutate(text = stringr::str_c(.data$Value,":", .data$Label)) %>%
-    dplyr::pull("text") %>%
+  x |>
+    dplyr::mutate(text = stringr::str_c(.data$Value,":", .data$Label)) |>
+    dplyr::pull("text") |>
+    stringr::str_trim() |>
     stringr::str_c(collapse="; ")
 }
 
