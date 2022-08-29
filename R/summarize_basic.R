@@ -1,3 +1,18 @@
+#' Title
+#'
+#' @param x
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+basic_flextable <- function(x, ...) {
+  summarize_basic(x, ...) |>
+    style_basic_as_flextable()
+}
+
+
 #' Create a basic summary table
 #'
 #' @description The simplest summary table would be evaluating all variables as categorical. This
@@ -13,6 +28,12 @@
 #' @importFrom magrittr %>%
 #' @examples
 summarize_basic <- function(x, var, header = "**Characteristic**", by=NULL) {
+
+
+  x <- x |>
+    dplyr::select(dplyr::all_of(c(var, by))) |>
+    expand_embedded_list()
+
   gtsummary::tbl_summary(x,
                          # Include only selected variables
                          include=tidyselect::all_of(var),
