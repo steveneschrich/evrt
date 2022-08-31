@@ -9,9 +9,6 @@ style_comments_as_flextable(x)
 \arguments{
 \item{x}{}
 }
-\value{
-
-}
 \description{
 Convert comment table to flextable output
 }

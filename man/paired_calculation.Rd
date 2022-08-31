@@ -9,9 +9,6 @@ paired_calculation(data, variable, by, summarizer, ...)
 \arguments{
 \item{...}{}
 }
-\value{
-
-}
 \description{
 Title
 }

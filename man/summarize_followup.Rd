@@ -4,13 +4,31 @@
 \alias{summarize_followup}
 \title{Create a categorical table with followup comments}
 \usage{
-summarize_followup(x, var, followup, header = "**Characteristic**")
+summarize_followup(
+  x,
+  vars,
+  followup,
+  header = "**Characteristic**",
+  group_headers = c("QUESTION", "FOLLOWUP"),
+  followup_statistic = "{n}"
+)
 }
 \arguments{
-\item{header}{}
+\item{x}{Labelled data frame containing all data in survey}
+
+\item{vars}{Variable to include as frequency table (character)}
+
+\item{followup}{Variable to include as follow-up field (character)}
+
+\item{group_headers}{A vector of strings of header names for the questions (default
+QUESTION) and followup (default FOLLOWUP).}
+
+\item{followup_statistic}{A statistic (see \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}}). Default
+is \code{"{n}"}, meaning include counts.}
 }
 \value{
-
+A \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}} representing the frequency of \code{var}, with
+any additional free text responses in \code{followup} listed below the table.
 }
 \description{
 Create a categorical table with followup comments

@@ -9,9 +9,6 @@ calculate_paired(x, vars, by = status ~ post - pre, subject_id = "record_id")
 \arguments{
 \item{subject_id}{}
 }
-\value{
-
-}
 \description{
 Summarize a table \code{x} of variables \code{vars} paired by \code{by}.
 }
@@ -23,18 +20,22 @@ First, assume we a evaluation table \code{x}. It has a number of variables (nume
 \code{a}, \code{b} and \code{c}. Further, this a pre/post condition which is stored in the variable \code{status}.
 
 We can look at the differences between \code{a}, \code{b} and \code{c} in pre/post status (in summarized form)
-with the following:\preformatted{summarize_paired_info(x, vars=c(a,b,c), by = status ~ post - pre, subject_id=record_id)
-}
+with the following:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{summarize_paired_info(x, vars=c(a,b,c), by = status ~ post - pre, subject_id=record_id)
+}\if{html}{\out{</div>}}
 
 This translates into summarizing vars (\code{a},\code{b},\code{c}) by taking the difference of the variable in question
 (each of \code{a},\code{b} and \code{c}) from the same subject (as indicated by \code{record_id}) between the \code{post} and \code{pre}
-values of the \code{status} column. The result is a table of the following:\preformatted{var = variable name (from input vars)
+values of the \code{status} column. The result is a table of the following:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{var = variable name (from input vars)
 mean = mean paired summary (taken from by)
 sd = standard deviation paired summary
 n = count of pairs
 p.value = wilcox signed rank (paired) test between levels (given in by)
 Label = the labels (if any) of the variables.
-}
+}\if{html}{\out{</div>}}
 }
 \note{
 This should be split into multiple different functions to make it easier to understand and to

@@ -2,15 +2,12 @@
 % Please edit documentation in R/calculate.R
 \name{tidy_data_for_calculation}
 \alias{tidy_data_for_calculation}
-\title{Tidy data for summarization}
+\title{Tidy data for summarization (Deprecated)}
 \usage{
 tidy_data_for_calculation(x, vars, by)
 }
 \arguments{
 \item{by}{}
-}
-\value{
-
 }
 \description{
 Prior to summarization, the data must be tidied for easier

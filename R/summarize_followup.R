@@ -15,7 +15,7 @@ followup_flextable <- function(x, ...) {
 #' Create a categorical table with followup comments
 #'
 #' @param x Labelled data frame containing all data in survey
-#' @param var Variable to include as frequency table (character)
+#' @param vars Variable to include as frequency table (character)
 #' @param followup Variable to include as follow-up field (character)
 #' @param header
 #' @param group_headers A vector of strings of header names for the questions (default
@@ -30,12 +30,12 @@ followup_flextable <- function(x, ...) {
 #' @importFrom magrittr %>%
 #'
 #' @examples
-summarize_followup <- function(x, var, followup, header="**Characteristic**",
+summarize_followup <- function(x, vars, followup, header="**Characteristic**",
                                group_headers = c("QUESTION","FOLLOWUP"),
                                followup_statistic = "{n}") {
 
   # If embedded lists are present, expand them here.
-  cattable <- dplyr::select(x, dplyr::all_of(var)) |>
+  cattable <- dplyr::select(x, dplyr::all_of(vars)) |>
     expand_embedded_list()
 
 

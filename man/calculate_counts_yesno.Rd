@@ -2,16 +2,13 @@
 % Please edit documentation in R/calculate.R
 \name{calculate_counts_yesno}
 \alias{calculate_counts_yesno}
-\title{Title}
+\title{Calculate counts for yes/no variables}
 \usage{
 calculate_counts_yesno(x, vars, by = NULL)
 }
 \arguments{
 \item{by}{}
 }
-\value{
-
-}
 \description{
-Title
+Calculate counts for yes/no variables
 }

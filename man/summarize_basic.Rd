@@ -4,13 +4,10 @@
 \alias{summarize_basic}
 \title{Create a basic summary table}
 \usage{
-summarize_basic(x, var, header = "**Characteristic**", by = NULL)
+summarize_basic(x, vars, header = "**Characteristic**", by = NULL)
 }
 \arguments{
 \item{by}{Variable to stratify summary by.}
-}
-\value{
-
 }
 \description{
 The simplest summary table would be evaluating all variables as categorical. This

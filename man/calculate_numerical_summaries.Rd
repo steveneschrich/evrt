@@ -13,9 +13,6 @@ calculate_numerical_summaries(x, vars, by = NULL)
 
 \item{by}{}
 }
-\value{
-
-}
 \description{
 Calculate standard statistics (mean, sd, se, n) from a
 list of variables in a tibble.

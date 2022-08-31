@@ -1,5 +1,20 @@
 #' Title
 #'
+#' @param x
+#' @param vars
+#' @param by
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+numeric_plot <- function(x, vars, by=NULL, ...) {
+  evrt::calculate_numerical_summaries(x,vars = vars,by = by) |>
+    evrt::plot_variables_as_numeric(x, by=by, ...)
+}
+#' Title
+#'
 #' @param x A table of variables
 #' @param dictionary
 #' @param by
@@ -21,6 +36,10 @@ plot_variables_as_numeric <- function(x,
 ) {
 
   if (!is.null(by)) by <- rlang::ensym(by)
+  # Turn the label into a factor to keep it from getting out of order. Probably
+  # should also use the variable name if the label isn't present.
+  x <- dplyr::mutate(x, label = forcats::fct_inorder(.data$label))
+
   # Wrap the labels to a reasonable width for printing
   x<-x %>% dplyr::mutate(label = fct_wrap(label, 35))
   #default_fill <- "#1380A1"
@@ -52,7 +71,9 @@ plot_variables_as_numeric <- function(x,
     ggplot2::scale_fill_manual(values =  col) +#,
 #                               guide = ggplot2::guide_legend(reverse=TRUE)) +
     ggplot2::geom_vline(xintercept = threshold, linetype = "dashed") +
-    ggplot2::labs(caption= factor_levels, title = title) +
+    ggplot2::labs(
+      caption= stringr::str_replace_all(factor_levels, pattern="; ", replacement = "\n"),
+      title = title) +
     ggplot2::ylab("") +
     ggplot2::xlab("") +
 
@@ -67,7 +88,26 @@ plot_variables_as_numeric <- function(x,
 
 }
 
-
+#' Title
+#'
+#' @param x
+#' @param vars
+#' @param threshold
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+threshold_plot <- function(x, vars, by=NULL, threshold, ...) {
+  evrt::calculate_counts_at_or_above_threshold(
+    x,
+    vars = vars,
+    by = by,
+    threshold = threshold
+  ) |>
+    evrt::plot_variables_as_threshold(threshold = threshold, by=by, ...)
+}
 #' Plot variable counts
 #'
 #' @param x A table of variables
@@ -90,6 +130,10 @@ plot_variables_as_threshold<- function(x,
 ) {
   # This is magic to turn string to expression, or leave as expression.
   if (!is.null(by)) by <- rlang::ensym(by)
+
+  # Turn the label into a factor to keep it from getting out of order. Probably
+  # should also use the variable name if the label isn't present.
+  x <- dplyr::mutate(x, label = forcats::fct_inorder(.data$label))
   # x has count, n and percent. label gives the info.
   # NOTENOTENOTE:::: The N is not guaranteed to be constant, how to fix this for
   ## the label????
@@ -127,7 +171,7 @@ plot_variables_as_threshold<- function(x,
     # Annotate the plot: this includes
     #  - description of scale in subtitle
     #  - scale in the caption
-    ggplot2::labs(caption=stringr::str_wrap(f, default_wrap_length),
+    ggplot2::labs(caption=stringr::str_replace_all(f, pattern="; ", replacement = "\n"),
                   title = stringr::str_wrap(title, default_wrap_length),
                   subtitle = stringr::str_wrap(
                     glue::glue("% Respondents Exceeding '{threshold}' Threshold (N={n})"),
@@ -141,6 +185,21 @@ plot_variables_as_threshold<- function(x,
 }
 
 
+#' Title
+#'
+#' @param x
+#' @param vars
+#' @param by
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+yesno_plot <- function(x, vars, by = NULL, ...) {
+  evrt::calculate_counts_yesno(x, vars = vars, by = by) |>
+    evrt::plot_variables_as_yesno(by=by, ...)
+}
 
 #' Plot variable counts
 #'
@@ -164,7 +223,9 @@ plot_variables_as_yesno<- function(x,
 ) {
   # This is magic to turn string to expression, or leave as expression.
   if (!is.null(by)) by <- ensym(by)
-
+  # Turn the label into a factor to keep it from getting out of order. Probably
+  # should also use the variable name if the label isn't present.
+  x <- dplyr::mutate(x, label = forcats::fct_inorder(.data$label))
   # For plotting, everything starts at the wrong direction.
   # x has count, n and percent. label gives the info.
   n <- x %>% dplyr::select(n) %>% dplyr::distinct() %>% dplyr::pull("n")

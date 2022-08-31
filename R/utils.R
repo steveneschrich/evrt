@@ -37,15 +37,20 @@ fct_wrap<-function(x, width=25) {
 #' \item label
 #' }
 #' @param x A tibble to extract labels from.
-#'
+#' @param vars A list of variables to extract labels (can use [tidyselect::tidyselect()] syntax).
 #' @return A tibble representing the labels. Two columns are returned: `variable` and `label`.
 #' @export
 #'
 #' @examples
 #' extract_var_labels(labelled::set_variable_labels(tibble::tribble(~a,~b,1,2), a="First variable", b="Second variable"))
-extract_var_labels<-function(x) {
-  # Extract and save labels
-  labelled::var_label(x) %>%
-    unlist() %>%
+extract_var_labels<-function(x, vars = dplyr::everything()) {
+
+  # Subset and order variables (default is everything)
+  dplyr::select(x, tidyselect::eval_select(expr = vars, data = x)) |>
+    # Extract labels (for subset, in order)
+    labelled::var_label(unlist=TRUE) |>
+    # Turn into tibble.
     tibble::enframe(name = "variable", value = "label")
 }
+
+

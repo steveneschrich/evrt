@@ -11,9 +11,6 @@ get_variable_range(dictionary, vars)
 
 \item{vars}{A list of variables to extract ranges for.}
 }
-\value{
-
-}
 \description{
 Title
 }

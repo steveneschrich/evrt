@@ -6,7 +6,7 @@
 \usage{
 summarize_basic_numeric(
   x,
-  var,
+  vars,
   dictionary,
   header = "**Characteristic**",
   summary = "mean",
@@ -17,9 +17,6 @@ summarize_basic_numeric(
 \item{dictionary}{The data dictionary for the instrument}
 
 \item{summary}{}
-}
-\value{
-
 }
 \description{
 Basic numerical summary table

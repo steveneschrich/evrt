@@ -9,9 +9,6 @@ get_min_levels(levels)
 \arguments{
 \item{levels}{Table of levels (Value and Label) for a variable.}
 }
-\value{
-
-}
 \description{
 Title
 }

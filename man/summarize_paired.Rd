@@ -15,9 +15,6 @@ summarize_paired(
 \arguments{
 \item{summarizer}{}
 }
-\value{
-
-}
 \description{
 Title
 }

@@ -11,9 +11,6 @@ fct_wrap(x, width = 25)
 
 \item{width}{Width to wrap text.}
 }
-\value{
-
-}
 \description{
 Wrap the text of a factor, recreating the factor.
 }

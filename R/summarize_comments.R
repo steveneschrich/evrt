@@ -16,14 +16,14 @@ comments_flextable <- function(x, ...) {
 #' Create a comment table
 #'
 #' @param x
-#' @param var
+#' @param vars
 #'
 #' @return
 #' @export
 #'
 #' @examples
-summarize_comments <- function(x, var, header = "**Characteristic**") {
-  dplyr::select(x, {{var}}) %>%
+summarize_comments <- function(x, vars, header = "**Characteristic**") {
+  dplyr::select(x, {{vars}}) %>%
     dplyr::na_if("") %>%
     gtsummary::tbl_summary(statistic=list(gtsummary::all_categorical() ~ ""),
                            missing = "no") %>%

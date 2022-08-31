@@ -21,9 +21,6 @@ plot_variables_as_threshold(
 
 \item{col}{Colors for the plot}
 }
-\value{
-
-}
 \description{
 Plot variable counts
 }

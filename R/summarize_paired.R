@@ -40,7 +40,7 @@ summarize_paired <- function(x, vars, dictionary, header = "**Characteristic**",
   checkmate::assert_vector(factor_levels, len=1)
 
   tbl <- x %>%
-    gtsummary::tbl_summary(include = all_of(vars),
+    gtsummary::tbl_summary(include = dplyr::all_of(vars),
                            by=!!formula.tools::lhs(summarizer),
                            type = list(everything() ~ "continuous"),
                            statistic = list(everything() ~ "{mean} ({sd})"),

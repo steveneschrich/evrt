@@ -2,7 +2,7 @@
 % Please edit documentation in R/docx.R
 \name{nl}
 \alias{nl}
-\title{Short-hand add new line in word document}
+\title{Short-hand to add new line in word document}
 \usage{
 nl(doc)
 }
@@ -13,5 +13,18 @@ nl(doc)
 A document with a blank paragraph added
 }
 \description{
-Short-hand add new line in word document
+When manipulating a word document, adding a blank line
+as a paragraph is often needed. This function inserts a blank paragraph
+into the given document.
+}
+\details{
+One can construct a word document through a series of \code{officer} commands. One
+particular use that is often needed is to insert a new paragraph, resulting in a blank
+line. This function is a short-hand to do that quickly.
+}
+\examples{
+\dontrun{
+officer::body_add_par("A paragraph of text") \%>\% nl() \%>\%
+officer::body_add_par("Another paragraph")
+}
 }

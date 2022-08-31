@@ -15,7 +15,7 @@ numeric_flextable <- function(x, ...) {
 #' Basic numerical summary table
 #'
 #' @param x
-#' @param var
+#' @param vars
 #' @param dictionary The data dictionary for the instrument
 #' @param header
 #' @param summary
@@ -24,13 +24,13 @@ numeric_flextable <- function(x, ...) {
 #' @export
 #'
 #' @examples
-summarize_basic_numeric <- function(x, var, dictionary,
+summarize_basic_numeric <- function(x, vars, dictionary,
                                           header = "**Characteristic**", summary="mean",
                                           by=NULL) {
-  factor_levels <- get_factor_levels(dictionary, var)
+  factor_levels <- get_factor_levels(dictionary, vars)
   checkmate::assert_vector(factor_levels, len=1)
 
-  gtsummary::tbl_summary(x, include=all_of(var), by= by,
+  gtsummary::tbl_summary(x, include=dplyr::all_of(vars), by= by,
                          type = list(everything() ~ "continuous"),
                          statistic = list(everything() ~ ifelse(summary=="mean", "{mean} ({sd})", "{median} ({p25}, {p75})")),
                          digits = list(everything() ~ ifelse(summary=="mean", c(2,0), c(0,0)))) %>%

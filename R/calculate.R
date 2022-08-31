@@ -14,41 +14,134 @@
 #'
 #' @examples
 calculate_numerical_summaries <- function(x, vars, by=NULL) {
-  tidy_data_for_calculation(x, vars, by) %>%
-    # Then compute statistics on the variable
+
+  checkmate::assert_data_frame(x |> dplyr::select(dplyr::all_of(vars)), type=c("numeric"))
+
+  stats <- x |>
+    # Here we select all needed variables first.
+    dplyr::select(dplyr::all_of(c(by, vars))) |>
+    # Remove variable labels to avoid pivoting problems
+    labelled::remove_labels() |>
+    # Then make the data long for computing
+    tidyr::pivot_longer(cols = dplyr::all_of(vars), names_to="variable") |>
+    # Group by the "by" and variable for computations
+    dplyr::group_by(dplyr::across(dplyr::all_of( c(by, "variable")))) |>
+    # Perform computations group-wise
     dplyr::summarize(
-      mean=mean(value),
-      sd = sd (value),
-      se = sd(value)/ sqrt(dplyr::n()),
-      n = dplyr::n()
-    ) %>%
-    format_calculations_for_plotting(x, vars)
+      mean = mean(value, na.rm=TRUE),
+      sd = sd(value, na.rm = TRUE),
+      n = length(na.omit(value)),
+      se = sd/n,
+      .groups="drop"
+    )
+
+
+  # Annotate counts with variable labels (if they exist).
+  stats <- extract_var_labels(x, vars) |>
+    dplyr::left_join(stats, by="variable") |>
+    dplyr::select(dplyr::all_of(by), variable, label, n, dplyr::everything())
+
+  stats
 
 }
 
-#' Title
+
+
+#' Calculate counts at or above a threshold for variables
+#'
+#' @description Calculate the counts of entries exceeding a threshold value
+#'  for a series of variables.
+#'
+#' @details
+#'
+#' @param x Data frame containing variables
+#' @param vars List of variables to count number at or above threshold
+#' @param threshold A string representing the threshold factor level.
+#' @param by An optional grouping variable to arrange data by
+#'
+#' @return A data frame of counts (see details).
+#' @export
+#'
+#' @examples
+calculate_counts_at_or_above_threshold <- function(x, vars, threshold = 0, by=NULL) {
+
+  # Verify that threshold is a valid level of all the variables.
+  checkmate::assert_true(
+      all(
+        purrr::map_lgl( dplyr::select(x, dplyr::all_of(vars)),
+                        ~threshold %in% levels(.))
+      )
+  )
+
+  calculate_counts(x, vars, by, f = count_at_or_above_threshold, threshold = threshold)
+}
+
+#' Calculate counts for yes/no variables
+#'
 #'
 #' @param x
-#' @param threshold
+#' @param vars
+#' @param by
 #'
 #' @return
 #' @export
 #'
 #' @examples
-calculate_counts_factor <- function(x, threshold = NULL) {
-  checkmate::assert_factor(x)
-  checkmate::assert_true(threshold %in% levels(x))
-  # index of threshold in the levels of the factor
-  i <- stringr::str_which(levels(x), glue::glue("^{threshold}$"))
-  # Enumerate levels that are at threshold or later in the levels list (for now).
-  matching_levels <- levels(x)[i:nlevels(x)]
-  # Count how many of x are in matching_levels
-  length(which(x %in% matching_levels))
+calculate_counts_yesno <- function(x, vars, by=NULL) {
+
+  calculate_counts(x, vars, by, f = count_yes)
+
 }
-cc_yesno <- function(x) {
-  checkmate::assert_factor(x, levels=c("Yes","No"))
-  length(which(x %in% "Yes"))
+
+
+
+#' Title
+#'
+#' @param x
+#' @param vars
+#' @param by
+#' @param f
+#' @param ...
+#'
+#' @return
+#' @export
+#'
+#' @examples
+calculate_counts <- function(x, vars, by = NULL, f=count_length, ...) {
+  counts <- x |>
+    # Group by the "by" variable first, then all operations are relative to it.
+    dplyr::group_by(dplyr::across(dplyr::all_of(by))) |>
+    # Summarize data (possibly grouped by "by").
+    dplyr::summarize(
+      # Calculate counts above threshold for each var
+      dplyr::across(
+        dplyr::all_of(vars),
+        ~list(f(.x, ...))
+      )
+    ) |>
+    # We have columns for each variable, transpose this to have many rows
+    # corresponding to each column.
+    tidyr::pivot_longer(
+      cols = dplyr::all_of(vars),
+      names_to="variable",
+      values_to = "count"
+    ) |>
+    tidyr::unnest("count") |>
+    # Calculate percentages for each variable
+    dplyr::mutate(percent = count/n)
+
+
+  # Annotate counts with variable labels (if they exist).
+  counts <- extract_var_labels(x, vars) |>
+    dplyr::left_join(counts, by="variable") |>
+    dplyr::select(dplyr::all_of(by), variable, label, count, n, percent)
+
+  counts
 }
+
+
+
+
 #' Title
 #'
 #' @param x
@@ -60,22 +153,34 @@ cc_yesno <- function(x) {
 #' @export
 #' @importFrom magrittr %>%
 #' @examples
-calculate_counts_at_threshold <- function(x, vars, threshold = 0, by=NULL) {
+calculate_counts_by_factor <- function(x, vars, by=NULL) {
 
-  # Tidy data for summarization (variable, value, by_field (optional)) grouped
-  # by variable and by.
-  tidy_data_for_calculation(x, vars, by) %>%
-    dplyr::summarize(
-      count = calculate_counts_factor(.data$value, threshold),
-      percent =  (count/dplyr::n()),
-      n = dplyr::n()
-    ) %>%
-    # Format results appropriately for plotting
-    format_calculations_for_plotting(x, vars=vars)
+  counts <- x |>
+    dplyr::group_by(dplyr::across(dplyr::all_of(by))) |>
+    dplyr::summarize(dplyr::across(dplyr::all_of(vars), function(.x) {
+      list(setNames(forcats::fct_count(.x), c("level","count")))
+    })) |>
+    tidyr::pivot_longer(cols=dplyr::all_of(vars), names_to="variable", values_to="level") |>
+    tidyr::unnest(cols="level") |>
+    dplyr::mutate(
+      n = nrow(x),
+      percent = count/n
+    )
+
+  # Annotate counts with variable labels (if they exist).
+   counts <- extract_var_labels(x, vars) |>
+    dplyr::left_join(counts, by="variable") |>
+    dplyr::select(dplyr::all_of(by), variable, label, level, count, n, percent)
+
+
+
+  counts
 
 }
 
-#' Tidy data for summarization
+
+
+#' Tidy data for summarization (Deprecated)
 #'
 #' @description Prior to summarization, the data must be tidied for easier
 #' summarization operations.
@@ -117,55 +222,6 @@ tidy_data_for_calculation<- function(x, vars, by) {
 }
 
 
-
-
-#' Title
-#' @description Given
-#' @param x
-#' @param xorig
-#' @param vars
-#'
-#' @return
-#'
-#' @examples
-format_calculations_for_plotting <- function(x, xorig, vars) {
-    x %>%
-    # Explicitly ungroup the tibble, so there are no downstream issues
-    dplyr::ungroup() %>%
-    # Join the labels back in.
-    dplyr::left_join(extract_var_labels(xorig),
-                     by=c("variable"="variable")) %>%
-
-    dplyr::left_join(
-      tibble::enframe(vars,name="i", value="variable"),
-                     by=c("variable" = "variable" )) %>%
-    dplyr::arrange(.data$i) %>%
-    dplyr::select(-.data$i) %>%
-    dplyr::mutate(label = factor(.data$label, levels=unique(.data$label)))
-
-}
-
-
-#' Title
-#'
-#' @param x
-#' @param vars
-#' @param by
-#'
-#' @return
-#' @export
-#'
-#' @examples
-calculate_counts_yesno <- function(x, vars, by=NULL) {
-  tidy_data_for_calculation(x, vars, by) %>%
-    # Then compute statistics on the variable
-    dplyr::summarize(
-      count = cc_yesno(value),
-      percent = count/n(),
-      n = n()
-    ) %>%
-    format_calculations_for_plotting(x, vars)
-}
 
 
 #' Summarize variables that are paired

@@ -6,9 +6,6 @@
 \usage{
 style_ggplot()
 }
-\value{
-
-}
 \description{
 This was adapted from the BBC template
 }

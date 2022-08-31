@@ -9,9 +9,6 @@ format_levels(x)
 \arguments{
 \item{x}{A dictionary column representing levels}
 }
-\value{
-
-}
 \description{
 A function to convert the data dictionary levels into string representations.
 }
@@ -19,6 +16,8 @@ A function to convert the data dictionary levels into string representations.
 The data dictionary contains information about specific variables in a redcap dataset. This
 routine will take as input the Levels variable of the dictionary and turn it into a vector of strings.
 
-The idiom should be:\preformatted{dictionary \%>\% mutate(levels_as_string = format_levels(Levels))
-}
+The idiom should be:
+
+\if{html}{\out{<div class="sourceCode">}}\preformatted{dictionary \%>\% mutate(levels_as_string = format_levels(Levels))
+}\if{html}{\out{</div>}}
 }

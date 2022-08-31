@@ -4,13 +4,10 @@
 \alias{summarize_comments}
 \title{Create a comment table}
 \usage{
-summarize_comments(x, var, header = "**Characteristic**")
+summarize_comments(x, vars, header = "**Characteristic**")
 }
 \arguments{
-\item{var}{}
-}
-\value{
-
+\item{vars}{}
 }
 \description{
 Create a comment table

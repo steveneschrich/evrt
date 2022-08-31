@@ -21,9 +21,6 @@ plot_variables_as_numeric(
 
 \item{col}{Colors for the plot}
 }
-\value{
-
-}
 \description{
 Title
 }

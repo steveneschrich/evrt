@@ -4,10 +4,12 @@
 \alias{extract_var_labels}
 \title{Extract variable labels as a tibble}
 \usage{
-extract_var_labels(x)
+extract_var_labels(x, vars = dplyr::everything())
 }
 \arguments{
 \item{x}{A tibble to extract labels from.}
+
+\item{vars}{A list of variables to extract labels (can use \code{\link[tidyselect:tidyselect-package]{tidyselect::tidyselect()}} syntax).}
 }
 \value{
 A tibble representing the labels. Two columns are returned: \code{variable} and \code{label}.

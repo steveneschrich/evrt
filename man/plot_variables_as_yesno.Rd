@@ -21,9 +21,6 @@ plot_variables_as_yesno(
 
 \item{col}{Colors for the plot}
 }
-\value{
-
-}
 \description{
 Plot variable counts
 }

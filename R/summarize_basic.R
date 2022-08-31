@@ -19,7 +19,7 @@ basic_flextable <- function(x, ...) {
 #' function generates this summary to remain consistent with more complex summary styles.
 #'
 #' @param x
-#' @param var
+#' @param vars
 #' @param header
 #' @param by Variable to stratify summary by.
 #' @return
@@ -27,16 +27,16 @@ basic_flextable <- function(x, ...) {
 #'
 #' @importFrom magrittr %>%
 #' @examples
-summarize_basic <- function(x, var, header = "**Characteristic**", by=NULL) {
+summarize_basic <- function(x, vars, header = "**Characteristic**", by=NULL) {
 
 
   x <- x |>
-    dplyr::select(dplyr::all_of(c(var, by))) |>
+    dplyr::select(dplyr::all_of(c(vars, by))) |>
     expand_embedded_list()
 
   gtsummary::tbl_summary(x,
                          # Include only selected variables
-                         include=tidyselect::all_of(var),
+                         include=tidyselect::all_of(vars),
                          # Force types to categorical - sometimes it is interpreted differently
                          type=list(tidyselect::everything() ~ "categorical"),
                          # Use the stratification variable.
