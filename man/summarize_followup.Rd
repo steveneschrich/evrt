@@ -10,7 +10,9 @@ summarize_followup(
   followup,
   header = "**Characteristic**",
   group_headers = c("QUESTION", "FOLLOWUP"),
-  followup_statistic = "{n}"
+  followup_statistic = "{n}",
+  include_overall = FALSE,
+  by = NULL
 )
 }
 \arguments{
@@ -25,6 +27,10 @@ QUESTION) and followup (default FOLLOWUP).}
 
 \item{followup_statistic}{A statistic (see \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}}). Default
 is \code{"{n}"}, meaning include counts.}
+
+\item{include_overall}{Include a column of overall summary (no categories)}
+
+\item{by}{Variable to stratify summary by.}
 }
 \value{
 A \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}} representing the frequency of \code{var}, with
