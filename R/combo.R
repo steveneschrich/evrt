@@ -22,9 +22,9 @@ combo_numeric <- function(x, vars, dictionary, by = NULL, header = "**Characteri
 
   ft_tbl <- numeric_flextable(x = x, vars=vars, by = by, dictionary = dictionary, header=header, summary=summary)
 
-  ft_plot <- numeric_plot(x = x, vars = vars, by = by, dictionary = dictionary, default_wrap_length= default_wrap_length,
+  nm_plot <- numeric_plot(x = x, vars = vars, by = by, dictionary = dictionary, default_wrap_length= default_wrap_length,
             threshold = threshold, title = title, col=col
   )
 
-  patchwork::wrap_plots(ft_tbl, ft_plot, ncol = 1, nrow = 2)
+  patchwork::wrap_plots(flextable::gen_grob(ft_tbl), nm_plot, ncol = 1, nrow = 2)
 }
