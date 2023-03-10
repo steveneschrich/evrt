@@ -47,7 +47,7 @@ summarize_followup <- function(x, vars, followup, header="**Characteristic**",
     gtsummary::tbl_summary(type=list(gtsummary::everything() ~ "categorical"), by =  by)
 
   ftable <- dplyr::select(x, dplyr::all_of(c(followup, by))) |>
-    dplyr::na_if("") |>
+    dplyr::mutate(dplyr::across(dplyr::everything(), \(.x){dplyr::na_if(.x,"")})) |>
     gtsummary::tbl_summary(
       statistic = list(gtsummary::all_categorical() ~ followup_statistic),
       missing = "no",
