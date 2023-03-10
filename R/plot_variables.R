@@ -11,7 +11,7 @@
 #' @examples
 numeric_plot <- function(x, vars, by=NULL, ...) {
   evrt::calculate_numerical_summaries(x,vars = vars,by = by) |>
-    evrt::plot_variables_as_numeric(x, by=by, ...)
+    evrt::plot_variables_as_numeric(by=by, ...)
 }
 #' Title
 #'
