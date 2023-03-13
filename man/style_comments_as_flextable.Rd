@@ -2,13 +2,37 @@
 % Please edit documentation in R/summarize_comments.R
 \name{style_comments_as_flextable}
 \alias{style_comments_as_flextable}
-\title{Convert comment table to flextable output}
+\title{Convert comment table to styled flextable}
 \usage{
-style_comments_as_flextable(x)
+style_comments_as_flextable(x, widths = c(5, 1))
 }
 \arguments{
-\item{x}{}
+\item{x}{A \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}} object for converting.}
+
+\item{widths}{(Default: c(5,1)): The relative widths of the
+two columns representing comments (usually Question, Response).}
+}
+\value{
+A \code{\link[flextable:flextable]{flextable::flextable()}} object representing the comment
+table \code{x}, appropriately styled.
 }
 \description{
-Convert comment table to flextable output
+Convert a comment table into a \code{\link[flextable:flextable]{flextable::flextable()}}
+object, applying default styling appropriate for comments.
+}
+\details{
+A \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}} table summarizes a data frame
+full of information. However, we often would like to visualize it
+as a nicely-formatted \code{\link[flextable:flextable]{flextable::flextable()}}, particularly within
+a MS-Word document or HTML output. This function does this conversion
+to a flextable. Along the way, it applies some styling to the table
+that has generally been helpful for visualization.
+}
+\examples{
+\dontrun{
+ tibble::tibble("This is a question"=c("comment 1","comment 2")) |>
+  summarize_comments() |>
+  style_comments_as_flextable()
+
+}
 }
