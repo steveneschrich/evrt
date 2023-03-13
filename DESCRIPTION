@@ -33,7 +33,8 @@ Imports:
     ggplot2,
     scales,
     tidyr,
-    formula.tools
+    formula.tools,
+    patchwork
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3

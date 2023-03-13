@@ -3,23 +3,26 @@
 #' @description Calculate standard statistics (mean, sd, se, n) from a
 #' list of variables in a tibble.
 #'
-#' @note At the moment, `by` is a bare word not a string.
+#' @note At the moment, `by` is a string.
 #'
-#' @param x Tibble to summarize
+#' @param x Data frame to summarize variables in
 #' @param vars Variables to summarize
-#' @param by
+#' @param by Optionally group by a column of data prior to summarization
 #'
-#' @return
+#' @return A table of summarized variables from `x`, including the count, mean, sd, se.
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' calculate_numerical_summaries(iris, vars=c("Sepal.Length","Sepal.Width"),by="Species")
+#' }
 calculate_numerical_summaries <- function(x, vars, by=NULL) {
 
-  checkmate::assert_data_frame(x |> dplyr::select(dplyr::all_of(vars)), type=c("numeric"))
+  checkmate::assert_data_frame(dplyr::select(x, dplyr::all_of(vars)), type=c("numeric"))
 
-  stats <- x |>
+  stats <-
     # Here we select all needed variables first.
-    dplyr::select(dplyr::all_of(c(by, vars))) |>
+    dplyr::select(x, dplyr::all_of(c(by, vars))) |>
     # Remove variable labels to avoid pivoting problems
     labelled::remove_labels() |>
     # Then make the data long for computing
