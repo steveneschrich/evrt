@@ -33,9 +33,6 @@ nl <- function(doc) {
 #' @return Word document object
 #' @export
 #'
-#' @importFrom magrittr %>%
-#'
-#' @examples
 docx_add <- function(doc, header = "", text = NULL, fig = NULL, ft = NULL,
                      level = 1, pre_page_break = FALSE, post_page_break= FALSE,
                      fig.height=5, fig.width=6) {
@@ -45,11 +42,11 @@ docx_add <- function(doc, header = "", text = NULL, fig = NULL, ft = NULL,
     else
       doc <- officer::body_add_par(doc, "\n")
 
-    doc <- doc %>%
+    doc <- doc |>
       officer::body_add_par(header, style=glue::glue("heading {level}"))
     if (!is.null(text)) {
-      doc <- doc %>%
-        officer::body_add_par(text) %>%
+      doc <- doc |>
+        officer::body_add_par(text) |>
         officer::body_add_par("\n\n")
     }
     if (!is.null(ft))
@@ -72,9 +69,6 @@ docx_add <- function(doc, header = "", text = NULL, fig = NULL, ft = NULL,
 #' @return Word document object
 #' @export
 #'
-#' @importFrom magrittr %>%
-#'
-#' @examples
 docx_add_section<-function(doc, ...) {
   docx_add(doc,level = 1,...)
 }
@@ -88,8 +82,6 @@ docx_add_section<-function(doc, ...) {
 #' @return Word document object
 #' @export
 #'
-#' @importFrom magrittr %>%
-#' @examples
 docx_add_subsection<-function(doc, header = "", text="", ft) {
   docx_add(doc, level = 2, ...)
 }

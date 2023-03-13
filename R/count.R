@@ -2,13 +2,16 @@
 #' Calculate count of observations of a vector at a threshold or greater
 #'
 #' @param x A vector of factor values to count
-#' @param threshold A threshold to count at or above
+#' @param threshold A threshold (factor value) to count at or above
+#' @param na.rm (TRUE) Remove NA values from count
 #'
-#'
-#' @return
+#' @return A count of the number of elements at or above threshold
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' count_at_or_above_threshold(iris$Species, "versicolor")
+#' }
 count_at_or_above_threshold <- function(x,threshold, na.rm=TRUE) {
   # x must be a factor
   checkmate::assert_true(is.factor(x))
@@ -53,12 +56,12 @@ count_yes <- function(x, na.rm = TRUE) {
 
 }
 
-#' Title
+#' Count length of x
 #'
-#' @param x
-#' @param vars
+#' @param x A data frame
+#' @param vars A list of variables for counting (not used)
 #'
-#' @return
+#' @return A count of x
 #' @export
 #'
 #' @examples
