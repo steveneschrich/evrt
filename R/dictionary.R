@@ -14,7 +14,13 @@
 #' @export
 #' @importFrom rlang .data
 #' @examples
+#' \dontrun{
+#' collapse_levels(tibble::tibble(Value=c(1,2,3), Label=c("One","Two","Three")))
+#'
+#'}
 collapse_levels<- function(x) {
+  checkmate::assert_data_frame(x)
+  checkmate::assert_subset(colnames(x), c("Value","Label"))
   x |>
     dplyr::mutate(text = stringr::str_c(.data$Value,":", .data$Label)) |>
     dplyr::pull("text") |>
@@ -31,7 +37,7 @@ collapse_levels<- function(x) {
 #'
 #' The idiom should be:
 #' ```
-#' dictionary %>% mutate(levels_as_string = format_levels(Levels))
+#' dictionary |> mutate(levels_as_string = format_levels(Levels))
 #' ```
 #'
 #' @param x A dictionary column representing levels
@@ -41,10 +47,13 @@ collapse_levels<- function(x) {
 #'
 #' @examples
 format_levels<- function(x) {
+  checkmate::assert_list(x, types = "data.frame")
+
   purrr::map_chr(x, collapse_levels)
 }
 
-#' Extract formatted factor levels from a dictionary for a list of variables.
+#' Extract formatted factor levels from a dictionary for a
+#' list of variables.
 #'
 #' @param dictionary Data dictionary
 #' @param vars Variable list to extract factor levels
@@ -52,17 +61,57 @@ format_levels<- function(x) {
 #' @return A unique list of strings (ideally one) representing the levels.
 #' @export
 #'
-#' @importFrom magrittr %>%
 #' @importFrom rlang .data
 #' @examples
-get_factor_levels <-function(dictionary, vars) {
-  dictionary %>%
-    dplyr::mutate( label_text = format_levels(.data$Levels)) %>%
-    dplyr::filter(.data$`Variable / Field Name` %in% !!vars) %>%
-    dplyr::pull("label_text") %>%
-    unique()
+get_factor_levels <-function(x, vars = colnames(x),dictionary = NULL) {
+  if ( is.null(dictionary) ) {
+    res <- levels_as_string(x, vars)
+  } else {
+    res <- dictionary |>
+      dplyr::filter(.data$`Variable / Field Name` %in% {{ vars }}) |>
+      dplyr::mutate( label_text = format_levels(.data$Levels)) |>
+      dplyr::select(.data$`Variable / Field Name`, label_text) |>
+      tibble::deframe() |>
+      unique()
+  }
+  res
 }
 
+#' Extract levels of variables as a string
+#'
+#' @description Extract from a data frame a subset of variables, then
+#'  create single-string descriptions of the levels of each of these
+#'  variables.
+#'
+#' @param x A data frame of factors
+#' @param vars A list of variables to choose from data frame
+#'
+#' @return A vector of strings where each string represents a concatenated
+#'  set of factor levels.
+#' @export
+#'
+#' @examples
+#' \dontrun{
+#' levels_as_string(iris, vars="Species")
+#' }
+levels_as_string <- function(x, vars = colnames(x)) {
+  xsub <- dplyr::select(x, dplyr::all_of(vars))
+
+  #checkmate::assert_data_frame(xsub, types="factor")
+
+  strlevel <- purrr::map_chr(xsub, \(x) {
+    if ( is.numeric(x) ) {
+      res <- "Continuous"
+    } else if ( is.factor(x) ) {
+      res <- paste(1:nlevels(x), levels(x), sep=":", collapse="; ")
+    } else {
+      res <- "Discrete"
+    }
+    res
+  })
+
+  strlevel
+}
 #' Title
 #'
 #' @param levels Table of levels (Value and Label) for a variable.
