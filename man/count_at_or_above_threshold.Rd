@@ -9,8 +9,18 @@ count_at_or_above_threshold(x, threshold, na.rm = TRUE)
 \arguments{
 \item{x}{A vector of factor values to count}
 
-\item{threshold}{A threshold to count at or above}
+\item{threshold}{A threshold (factor value) to count at or above}
+
+\item{na.rm}{(TRUE) Remove NA values from count}
+}
+\value{
+A count of the number of elements at or above threshold
 }
 \description{
 Calculate count of observations of a vector at a threshold or greater
+}
+\examples{
+\dontrun{
+count_at_or_above_threshold(iris$Species, "versicolor")
+}
 }

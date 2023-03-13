@@ -2,13 +2,18 @@
 % Please edit documentation in R/count.R
 \name{count_length}
 \alias{count_length}
-\title{Title}
+\title{Count length of x}
 \usage{
 count_length(x, vars)
 }
 \arguments{
-\item{vars}{}
+\item{x}{A data frame}
+
+\item{vars}{A list of variables for counting (not used)}
+}
+\value{
+A count of x
 }
 \description{
-Title
+Count length of x
 }
