@@ -18,6 +18,6 @@ routine will take as input the Levels variable of the dictionary and turn it int
 
 The idiom should be:
 
-\if{html}{\out{<div class="sourceCode">}}\preformatted{dictionary \%>\% mutate(levels_as_string = format_levels(Levels))
+\if{html}{\out{<div class="sourceCode">}}\preformatted{dictionary |> mutate(levels_as_string = format_levels(Levels))
 }\if{html}{\out{</div>}}
 }

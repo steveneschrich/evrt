@@ -4,11 +4,39 @@
 \alias{summarize_comments}
 \title{Create a comment table}
 \usage{
-summarize_comments(x, vars, header = "**Characteristic**")
+summarize_comments(x, vars = dplyr::everything(x), header = "**Comments**")
 }
 \arguments{
-\item{vars}{}
+\item{x}{The data frame to summarize}
+
+\item{vars}{(default: dplyr::everything) Columns of the data frame
+that contain comments}
+
+\item{header}{(default: "\strong{Comments}") The summary table header}
+}
+\value{
+A \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}} object representing the non-empty
+fields of \code{vars} listed.
 }
 \description{
-Create a comment table
+Extract variables from the table and format the non-empty
+strings within these variables as a summary table.
+}
+\details{
+This function combines (potentially) multiple columns of a
+data frame into a single output summary table. This table has the
+question name (or column name if there is no \code{\link[labelled:var_label]{labelled::var_label()}})
+followed by all non-empty values, one per line.
+
+This is most useful as a way to summarize a question (or questions)
+that have free-text answers. This function just shows the responses.
+}
+\examples{
+\dontrun{
+tibble::tibble("This is a question"=c("comment 1","comment 2")) |>
+  summarize_comments()
+}
+}
+\seealso{
+style_comments_as_flextable()
 }

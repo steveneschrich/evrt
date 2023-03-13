@@ -23,3 +23,9 @@ This function assumes as input a \code{Levels} tibble which can be converted int
 To convert all levels in the dictionary, see \code{\link{format_levels}}. This function converts only the levels
 for a single variable.
 }
+\examples{
+\dontrun{
+collapse_levels(tibble::tibble(Value=c(1,2,3), Label=c("One","Two","Three")))
+
+}
+}

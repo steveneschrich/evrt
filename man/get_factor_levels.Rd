@@ -2,18 +2,20 @@
 % Please edit documentation in R/dictionary.R
 \name{get_factor_levels}
 \alias{get_factor_levels}
-\title{Extract formatted factor levels from a dictionary for a list of variables.}
+\title{Extract formatted factor levels from a dictionary for a
+list of variables.}
 \usage{
-get_factor_levels(dictionary, vars)
+get_factor_levels(x, vars = colnames(x), dictionary = NULL)
 }
 \arguments{
-\item{dictionary}{Data dictionary}
-
 \item{vars}{Variable list to extract factor levels}
+
+\item{dictionary}{Data dictionary}
 }
 \value{
 A unique list of strings (ideally one) representing the levels.
 }
 \description{
-Extract formatted factor levels from a dictionary for a list of variables.
+Extract formatted factor levels from a dictionary for a
+list of variables.
 }

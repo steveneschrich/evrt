@@ -7,16 +7,24 @@
 calculate_numerical_summaries(x, vars, by = NULL)
 }
 \arguments{
-\item{x}{Tibble to summarize}
+\item{x}{Data frame to summarize variables in}
 
 \item{vars}{Variables to summarize}
 
-\item{by}{}
+\item{by}{Optionally group by a column of data prior to summarization}
+}
+\value{
+A table of summarized variables from \code{x}, including the count, mean, sd, se.
 }
 \description{
 Calculate standard statistics (mean, sd, se, n) from a
 list of variables in a tibble.
 }
 \note{
-At the moment, \code{by} is a bare word not a string.
+At the moment, \code{by} is a string.
+}
+\examples{
+\dontrun{
+calculate_numerical_summaries(iris, vars=c("Sepal.Length","Sepal.Width"),by="Species")
+}
 }

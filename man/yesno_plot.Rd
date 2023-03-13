@@ -7,6 +7,8 @@
 yesno_plot(x, vars, by = NULL, ...)
 }
 \arguments{
+\item{x}{A data frame to plot variable(s) from}
+
 \item{...}{}
 }
 \description{

@@ -7,6 +7,8 @@
 threshold_plot(x, vars, by = NULL, threshold, ...)
 }
 \arguments{
+\item{x}{A data frame to plot variable(s) from}
+
 \item{...}{}
 }
 \description{

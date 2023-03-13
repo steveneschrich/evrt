@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{fct_wrap}
 \alias{fct_wrap}
-\title{Wrap the text of a factor, recreating the factor.}
+\title{Wrap the text of factor levels}
 \usage{
 fct_wrap(x, width = 25)
 }
@@ -11,6 +11,16 @@ fct_wrap(x, width = 25)
 
 \item{width}{Width to wrap text.}
 }
+\value{
+A list of factor data with the levels wrapped at \code{width}.
+}
 \description{
-Wrap the text of a factor, recreating the factor.
+Rewrite a factor by wrapping the levels of the factor
+to a shorter width (per line). Will coerce a non-factor to factor
+first, then shorten the labels.
+}
+\examples{
+\dontrun{
+fct_wrap(paste(iris$Species, "iris", sep=" "), width=2)
+}
 }

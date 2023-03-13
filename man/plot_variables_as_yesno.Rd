@@ -15,7 +15,7 @@ plot_variables_as_yesno(
 )
 }
 \arguments{
-\item{x}{A table of variables}
+\item{x}{A data frame to plot variable(s) from}
 
 \item{title}{A title for the plot}
 
