@@ -7,10 +7,23 @@
 #' @export
 #'
 #' @examples
-followup_flextable <- function(x, ...) {
-  summarize_followup(x, ...) |>
-    style_followup_as_flextable()
+flextable_followup <- function(x,  vars,
+                               followup,
+                               header = "",
+                               by=NULL,
+                               group_headers =  c("",""),
+                               followup_statistic = "{n}",
+                               include_overall = FALSE ) {
+
+  summarize_followup(x, vars, followup=followup, header=header,
+                     group_headers = group_headers,
+                     followup_statistic = followup_statistic,
+                     include_overall=include_overall,
+                     by = by) |>
+    as_flextable() |>
+    style_followup_flextable()
 }
+
 
 #' Create a categorical table with followup comments
 #'
@@ -29,7 +42,6 @@ followup_flextable <- function(x, ...) {
 #'  any additional free text responses in `followup` listed below the table.
 #'
 #' @export
-#' @importFrom magrittr %>%
 #'
 #' @examples
 summarize_followup <- function(x, vars, followup, header="**Characteristic**",
@@ -52,7 +64,7 @@ summarize_followup <- function(x, vars, followup, header="**Characteristic**",
       dplyr::across(
         dplyr::everything(),
         \(.x){
-          labelled::recode_if(.x, is.na(.x), "")
+          labelled::recode_if(.x,.x == "", NA)
         }
       )
     ) |>
@@ -78,18 +90,24 @@ summarize_followup <- function(x, vars, followup, header="**Characteristic**",
 
 
 
-#' Convert followup table to flextable output
+#' Style flextable as a followup table
 #'
-#' @param x A gtsummary table
+#' @description Apply consistent styling to a follow up flextable
+#'  to fit the typical contents of the table.
 #'
-#' @return A flextable object representing x.
+#' @param x A flextable
+#'
+#' @return A flextable with specific styling applied
 #' @export
 #'
-#' @importFrom magrittr %>%
 #' @examples
-style_followup_as_flextable <- function(x) {
+#' \dontrun{
+#' gtsummary::tbl_summary(iris) |>
+#'   as_flextable() |>
+#'   style_followup_flextable()
+#' }
+style_followup_flextable <- function(x) {
   x |>
-    gtsummary::as_flex_table() |>
     flextable::set_table_properties(layout="autofit", width=1) |>
     #flextable::width(j=1:6,width=c(1,3,0.75,0.75,0.75,0.75)) %>%
     style_flextable()
