@@ -1,33 +1,21 @@
-#' Generate a flextable of categorical variables in a data frame
+#' Categorical data type
 #'
-#' @param x The data frame to summarize
-#' @param vars (default: dplyr::everything) Columns of the data frame
-#'    that contain categorical fields
-#' @param header (default: "**Characteristic**") The summary table header
-#' @param by Variable to stratify summary by.
-#' @param include_overall Include a column of overall summary. Note this only
-#'   works (and makes sense) when the `by` variable is used.
+#' @description A categorical type is a question involving one response out of
+#' a set of options. These options can be treated as numeric if on a likert
+#' scale, but generally are categorical.
 #'
-#' @return A [gtsummary::tbl_summary()] object representing the categorical
-#'  breakdown of `vars` from `x`.
+#' @details With a categorical variable, the summarizations are frequency
+#' tables by category level.
 #'
-#' @export
+#' Possibilities include
+#' - summarize_categorical: Create a summarized table of the question(s)
+#' - plot_categorical: Create a figure of the categorical response frequencies.
+#' - gvsummary_categorical: Create a flextable and plot of the categorical responses.
 #'
-#' @examples
-#' \dontrun{
-#' flextable_categorical(ToothGrowth, vars=c("dose"),
-#'    by = "supp", include_overall=TRUE)
-#' }
-flextable_categorical <- function(x,
-                                  vars,
-                                  header = "**Characteristic**",
-                                  by=NULL,
-                                  include_overall = FALSE ) {
-  summarize_categorical(x, vars=vars, header=header, by=by,
-                        include_overall=include_overall) |>
-    as_flextable() |>
-    style_categorical_flextable()
-}
+#' @name categorical
+NULL
+
+
 
 
 #' Create a basic categorical variable breakdown table
@@ -44,10 +32,15 @@ flextable_categorical <- function(x,
 #' @param x The data frame to summarize
 #' @param vars (default: dplyr::everything) Columns of the data frame
 #'    that contain categorical fields
-#' @param header (default: "**Characteristic**") The summary table header
 #' @param by Variable to stratify summary by.
+#' @param header (default: "**Characteristic**") The summary table header
 #' @param include_overall Include a column of overall summary. Note this only
 #'   works (and makes sense) when the `by` variable is used.
+#' @param output A string representing the desired output. Choices include:
+#'  - "gtsummary" A [gtsummary::gtsummary] object.
+#'  - "flextable" A [flextable::flextable] table with formatting applied to a gtsummary table.
+#'  - "rmarkdown" Raw flextable output for use in rmarkdown (see [flextable::flextable_to_rmd()]
+#'    for details). This is most suitable for running summarize in a loop or as list component.
 #'
 #' @return A [gtsummary::tbl_summary()] object representing the categorical
 #'  breakdown of `vars` from `x`.
@@ -61,21 +54,22 @@ flextable_categorical <- function(x,
 #' }
 #'
 summarize_categorical<- function(x, vars,
-                                 header = "**Characteristic**", by=NULL,
-                            include_overall = FALSE) {
+                                 header = "", by=NULL,
+                            include_overall = FALSE,
+                            output = c("gtsummary","flextable", "rmarkdown")) {
 
-
-  x <- x |>
-    dplyr::select(dplyr::all_of(c(vars, by))) |>
-    expand_embedded_list(by=by)
+  output <- match.arg(output)
+ # x <- x |>
+#    dplyr::select(dplyr::all_of(c(vars, by))) |>
+#    expand_embedded_list(by=by)
 
   tbl <- gtsummary::tbl_summary(x,
                          # Include only selected variables
-                         include=tidyselect::all_of(vars),
+                         include=dplyr::all_of(vars),
                          # Force types to categorical - sometimes it is interpreted differently
                          type=list(tidyselect::everything() ~ "categorical"),
                          # Use the stratification variable.
-                         by=by
+                         by=dplyr::all_of(by)
    ) |>
     # Change header to include header text
     gtsummary::modify_header(update = list(label ~ header))
@@ -83,6 +77,14 @@ summarize_categorical<- function(x, vars,
   # Add overall if needed
   if ( !is.null(by) && include_overall )
     tbl <- gtsummary::add_overall(tbl, last = TRUE, col_label="**Total** N = {N}")
+
+  # Decide on output: gtsummary, flextable or rmarkdown.
+  if ( output == "flextable" || output == "rmarkdown") {
+    tbl <- gtsummary::as_flex_table(tbl) |>
+      evrt::style_categorical_flextable()
+    if ( output == "rmarkdown" )
+      tbl <- flextable::flextable_to_rmd(tbl)
+  }
 
   tbl
 }

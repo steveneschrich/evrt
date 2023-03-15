@@ -4,7 +4,16 @@
 \alias{summarize_comments}
 \title{Create a comment table}
 \usage{
-summarize_comments(x, vars = dplyr::everything(x), header = "**Comments**")
+summarize_comments(
+  x,
+  vars = dplyr::everything(x),
+  header = "",
+  include_counts = FALSE,
+  by = NULL,
+  include_overall = FALSE,
+  output = c("gtsummary", "flextable", "rmarkdown"),
+  statistic = ""
+)
 }
 \arguments{
 \item{x}{The data frame to summarize}
@@ -13,6 +22,14 @@ summarize_comments(x, vars = dplyr::everything(x), header = "**Comments**")
 that contain comments}
 
 \item{header}{(default: "\strong{Comments}") The summary table header}
+
+\item{output}{A string representing the desired output. Choices include:
+\itemize{
+\item "gtsummary" A \link[gtsummary:gtsummary-package]{gtsummary::gtsummary} object.
+\item "flextable" A \link[flextable:flextable]{flextable::flextable} table with formatting applied to a gtsummary table.
+\item "rmarkdown" Raw flextable output for use in rmarkdown (see \code{\link[flextable:flextable_to_rmd]{flextable::flextable_to_rmd()}}
+for details). This is most suitable for running summarize in a loop or as list component.
+}}
 }
 \value{
 A \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}} object representing the non-empty
@@ -33,7 +50,7 @@ that have free-text answers. This function just shows the responses.
 }
 \examples{
 \dontrun{
-tibble::tibble("This is a question"=c("comment 1","comment 2")) |>
+tibble::tibble("This is a question"=c("comment 1","comment 2", NA,"comment 3")) |>
   summarize_comments()
 }
 }

@@ -1,24 +1,9 @@
-#' Generate a flextable of comments in a data frame
+#' Comments data type
 #'
-#' @param x A data frame
-#' @param vars (default: dplyr::everything()) Variables that
-#'    have comments
-#' @param header (default: "**Comments**") Header text of the
-#'    flextable
-#'
-#' @return A comment table formatted as a [flextable::flextable()]
-#' @export
-#'
-#' @examples
-#' \dontrun{
-#' tibble::tibble("This is a question"=c("comment 1","comment 2")) |>
-#'   flextable_comments()
-#' }
-flextable_comments <- function(x, vars = dplyr::everything(x),
-                               header = "**Comments**") {
-  summarize_comments(x,vars = vars, header = header) |>
-    style_comments_as_flextable()
-}
+#' @description Comments are free-text responses that are summarized into
+#'  a table of non-NA rows.
+#' @name comments
+NULL
 
 
 #' Create a comment table
@@ -38,7 +23,12 @@ flextable_comments <- function(x, vars = dplyr::everything(x),
 #' @param vars (default: dplyr::everything) Columns of the data frame
 #'    that contain comments
 #' @param header (default: "**Comments**") The summary table header
-#'
+#' @param output A string representing the desired output. Choices include:
+#'  - "gtsummary" A [gtsummary::gtsummary] object.
+#'  - "flextable" A [flextable::flextable] table with formatting applied to a gtsummary table.
+#'  - "rmarkdown" Raw flextable output for use in rmarkdown (see [flextable::flextable_to_rmd()]
+#'    for details). This is most suitable for running summarize in a loop or as list component.
+
 #' @return A [gtsummary::tbl_summary()] object representing the non-empty
 #'  fields of `vars` listed.
 #'
@@ -47,35 +37,56 @@ flextable_comments <- function(x, vars = dplyr::everything(x),
 #'
 #' @examples
 #' \dontrun{
-#' tibble::tibble("This is a question"=c("comment 1","comment 2")) |>
+#' tibble::tibble("This is a question"=c("comment 1","comment 2", NA,"comment 3")) |>
 #'   summarize_comments()
 #' }
 summarize_comments <- function(x,
                                vars = dplyr::everything(x),
-                               header = "**Comments**") {
-   select_and_na(x, vars) |>
+                               header = "",
+                               include_counts = FALSE,
+                               by = NULL,
+                               include_overall = FALSE,
+                               output = c("gtsummary","flextable", "rmarkdown"),
+                               statistic = ""
+                               ) {
+  output <- match.arg(output)
+
+  if ( include_counts )
+    statistic = "{n}"
+
+  tbl <- x |>
     gtsummary::tbl_summary(
-      statistic=list(gtsummary::all_categorical() ~ ""),
-      missing = "no"
+      include = dplyr::all_of(vars),
+      statistic=list(gtsummary::all_categorical() ~ statistic),
+      missing = "no",
+      by = dplyr::all_of(by)
     ) |>
     gtsummary::modify_header(update = list(label ~ header)) |>
     gtsummary::modify_footnote(update = gtsummary::everything() ~ NA)
+
+  if ( !is.null(by) && include_overall )
+    tbl <- gtsummary::add_overall(tbl, last = TRUE, col_label = "**Total** N = {N}")
+
+
+  # Decide on output: gtsummary, flextable or rmarkdown.
+  if ( output == "flextable" || output == "rmarkdown") {
+    tbl <- gtsummary::as_flex_table(tbl) |>
+      evrt::style_comments_as_flextable()
+    if ( output == "rmarkdown" )
+      tbl <- flextable::flextable_to_rmd(tbl)
+  }
+
+  tbl
 }
 
 
-#' Convert comment table to styled flextable
+#' Style flextable with sensible defaults
 #'
-#' @description Convert a comment table into a [flextable::flextable()]
+#' @description Style a [flextable::flextable()] comments
 #'  object, applying default styling appropriate for comments.
 #'
-#' @details A [gtsummary::tbl_summary()] table summarizes a data frame
-#'  full of information. However, we often would like to visualize it
-#'  as a nicely-formatted [flextable::flextable()], particularly within
-#'  a MS-Word document or HTML output. This function does this conversion
-#'  to a flextable. Along the way, it applies some styling to the table
-#'  that has generally been helpful for visualization.
 #'
-#' @param x A [gtsummary::tbl_summary()] object for converting.
+#' @param x A [flextable::flextable()] object for styling.
 #' @param widths (Default: c(5,1)): The relative widths of the
 #'  two columns representing comments (usually Question, Response).
 #'
@@ -93,8 +104,7 @@ summarize_comments <- function(x,
 #' }
 style_comments_as_flextable <- function(x, widths = c(5,1)) {
 
-    # Convert to flextable
-    gtsummary::as_flex_table(x) |>
+  x|>
     # Sensible defaults or overridden
     flextable::width(j=1:2,width=widths) |>
     style_flextable()
