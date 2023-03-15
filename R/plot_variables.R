@@ -186,65 +186,64 @@ plot_variables_as_numeric <- function(x,
 
 }
 
-#' Title
-#'
-#' @param x A data frame to plot variable(s) from
-#' @param vars
-#' @param threshold
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-threshold_plot <- function(x, vars, by=NULL, threshold, ...) {
-  evrt::calculate_counts_at_or_above_threshold(
-    x,
-    vars = vars,
-    by = by,
-    threshold = threshold
-  ) |>
-    evrt::plot_variables_as_threshold(threshold = threshold, by=by, ...)
-}
+
 #' Plot variable counts
 #'
 #' @param x A data frame to plot variable(s) from
 #' @param dictionary
 #' @param by
-#' @param default_wrap_length
+#' @param threshold
+#' @param wrap_length
 #' @param title A title for the plot
 #' @param col Colors for the plot
 #' @return
 #' @export
 #'
 #' @examples
-plot_variables_as_threshold<- function(x,
-                                       dictionary,
+plot_threshold<- function(x, vars,
+                                       dictionary = NULL,
                                        by=NULL,
-                                       default_wrap_length = 35,
+                                       wrap_length = 35,
                                        threshold = "",
                                        title = "Response",
+                          xlab = NULL,
                                        col = c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
 ) {
+
+  # Set xlab to values if labels not given
+  if ( is.null(xlab) )  xlab <- default_labels(x, vars)
+  f<-get_factor_levels(x, vars, dictionary)
+
+  xs <- evrt::calculate_counts_at_or_above_threshold(
+    x,
+    vars = vars,
+    by = by,
+    threshold = threshold
+  )
+
   # This is magic to turn string to expression, or leave as expression.
   if (!is.null(by)) by <- rlang::ensym(by)
 
   # Turn the label into a factor to keep it from getting out of order. Probably
   # should also use the variable name if the label isn't present.
-  x <- dplyr::mutate(x, label = forcats::fct_inorder(.data$label))
+  xs <- dplyr::mutate(xs, label = forcats::fct_inorder(.data$label))
+
   # x has count, n and percent. label gives the info.
   # NOTENOTENOTE:::: The N is not guaranteed to be constant, how to fix this for
   ## the label????
-  n <- x %>% dplyr::select(n) %>% dplyr::distinct() %>% dplyr::pull("n")
+  n <- xs |>
+    dplyr::select(n) |>
+    dplyr::distinct() |>
+    dplyr::pull("n")
   # Wrap the labels to a reasonable width for printing. Note that this
   # bashes the factor so we need to do this intelligently.
-  x<-x %>% dplyr::mutate(label = fct_wrap(.data$label, default_wrap_length))
+  xs <- dplyr::mutate(xs, label = fct_wrap(.data$label, wrap_length))
+
   default_fill <- "#1380A1"
   default_fill <- "#4F81BD"
   #if (is.null(by)) by <- default_fill
   #fill = "#1380A1
-  f<-get_factor_levels(x$variable, dictionary)
-  g<- ggplot2::ggplot(x, ggplot2::aes(y = forcats::fct_rev(label), x=percent,
+  g<- ggplot2::ggplot(xs, ggplot2::aes(y = forcats::fct_rev(label), x=percent,
                                       fill = forcats::fct_rev(!!by)))
 
   # ggplot2::geom_bar(stat="identity",position=position_dodge(width=0.9))
@@ -270,10 +269,10 @@ plot_variables_as_threshold<- function(x,
     #  - description of scale in subtitle
     #  - scale in the caption
     ggplot2::labs(caption=stringr::str_replace_all(f, pattern="; ", replacement = "\n"),
-                  title = stringr::str_wrap(title, default_wrap_length),
+                  title = stringr::str_wrap(title, wrap_length),
                   subtitle = stringr::str_wrap(
                     glue::glue("% Respondents Exceeding '{threshold}' Threshold (N={n})"),
-                    default_wrap_length)) +
+                    wrap_length)) +
 
     # Apply standard style for the library
     style_ggplot()
@@ -283,57 +282,54 @@ plot_variables_as_threshold<- function(x,
 }
 
 
-#' Title
+#' Plot yes/no variable frequency of yes
 #'
 #' @param x A data frame to plot variable(s) from
-#' @param vars
-#' @param by
-#' @param ...
-#'
-#' @return
-#' @export
-#'
-#' @examples
-yesno_plot <- function(x, vars, by = NULL, ...) {
-  evrt::calculate_counts_yesno(x, vars = vars, by = by) |>
-    evrt::plot_variables_as_yesno(by=by, ...)
-}
-
-#' Plot variable counts
-#'
-#' @param x A data frame to plot variable(s) from
-#' @param dictionary
-#' @param by
-#' @param default_wrap_length
+#' @param vars A list of column names to plot
+#' @param by A grouping column
+#' @param wrap_length Length of factor level to wrap strings at
 #' @param title A title for the plot
 #' @param col Colors for the plot
 #' @return
 #' @export
 #'
 #' @examples
-plot_variables_as_yesno<- function(x,
-                                       dictionary,
-                                       by=NULL,
-                                       default_wrap_length = 35,
-                                       threshold = "",
-                                       title = "",
-                                       col = c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
+plot_yesno<- function(x, vars,
+                                   by=NULL,
+                                   wrap_length = 35,
+                                   xlab = NULL,
+                                   title = "",
+                                   col = c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
 ) {
+
+  # Set xlab to values if labels not given
+  if ( is.null(xlab) )  xlab <- default_labels(x, vars)
+
+  # Calculate summary information for plot
+  xs <- calculate_counts_yesno(x, vars = vars, by = by)
+
   # This is magic to turn string to expression, or leave as expression.
   if (!is.null(by)) by <- ensym(by)
+
   # Turn the label into a factor to keep it from getting out of order. Probably
   # should also use the variable name if the label isn't present.
-  x <- dplyr::mutate(x, label = forcats::fct_inorder(.data$label))
+  xs <- dplyr::mutate(xs, label = forcats::fct_inorder(.data$label))
+
   # For plotting, everything starts at the wrong direction.
-  # x has count, n and percent. label gives the info.
-  n <- x %>% dplyr::select(n) %>% dplyr::distinct() %>% dplyr::pull("n")
+  # xs has count, n and percent. label gives the info.
+  n <- xs |>
+    dplyr::select(n) |>
+    dplyr::distinct() |>
+    dplyr::pull("n")
+
   # Wrap the labels to a reasonable width for printing
-  x<-x %>% dplyr::mutate(label = fct_wrap(label, 35))
+  xs <- xs |>
+    dplyr::mutate(label = fct_wrap(label, wrap_length))
   default_fill <- "#1380A1"
   default_fill <- "#4F81BD"
   #if (is.null(by)) by <- default_fill
   #fill = "#1380A1
-  g<- ggplot2::ggplot(x, ggplot2::aes(y=forcats::fct_rev(label), x=percent,
+  g<- ggplot2::ggplot(xs, ggplot2::aes(y=forcats::fct_rev(label), x=percent,
                                       fill = forcats::fct_rev({{by}})))
 
   # ggplot2::geom_bar(stat="identity",position=position_dodge(width=0.9))
@@ -345,7 +341,7 @@ plot_variables_as_yesno<- function(x,
       ggplot2::geom_bar(stat="identity",position=ggplot2::position_dodge(width=0.9))
   }
   g<- g +
-    ggplot2::geom_hline(yintercept = 0, size = 1, colour="#333333") +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
     ggplot2::scale_fill_manual(values =  col) + #,
   #                             guide = ggplot2::guide_legend(reverse=TRUE)) +
     ggplot2::scale_x_continuous(labels = scales::percent) +
