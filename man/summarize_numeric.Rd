@@ -7,10 +7,12 @@
 summarize_numeric(
   x,
   vars = colnames(x),
+  by = NULL,
   dictionary = NULL,
   header = "**Characteristic**",
   summary = "mean",
-  by = NULL
+  include_overall = TRUE,
+  output = c("gtsummary", "flextable", "rmarkdown")
 )
 }
 \arguments{
@@ -18,9 +20,28 @@ summarize_numeric(
 
 \item{vars}{Specific variables to summarize (default is all).}
 
+\item{by}{Variable to stratify summary by.}
+
 \item{dictionary}{The data dictionary for the instrument (optional)}
 
-\item{summary}{}
+\item{header}{(default: "\strong{Characteristic}") The summary table header}
+
+\item{summary}{A summary measure (default = "mean")}
+
+\item{include_overall}{Include a column of overall summary. Note this only
+works (and makes sense) when the \code{by} variable is used.}
+
+\item{output}{A string representing the desired output. Choices include:
+\itemize{
+\item "gtsummary" A \link[gtsummary:gtsummary-package]{gtsummary::gtsummary} object.
+\item "flextable" A \link[flextable:flextable]{flextable::flextable} table with formatting applied to a gtsummary table.
+\item "rmarkdown" Raw flextable output for use in rmarkdown (see \code{\link[flextable:flextable_to_rmd]{flextable::flextable_to_rmd()}}
+for details). This is most suitable for running summarize in a loop or as list component.
+}}
+}
+\value{
+A table object representing the numeric
+breakdown of \code{vars} from \code{x}.
 }
 \description{
 Summarize numeric variables

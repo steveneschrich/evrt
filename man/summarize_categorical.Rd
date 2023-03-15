@@ -7,9 +7,10 @@
 summarize_categorical(
   x,
   vars,
-  header = "**Characteristic**",
+  header = "",
   by = NULL,
-  include_overall = FALSE
+  include_overall = FALSE,
+  output = c("gtsummary", "flextable", "rmarkdown")
 )
 }
 \arguments{
@@ -24,6 +25,14 @@ that contain categorical fields}
 
 \item{include_overall}{Include a column of overall summary. Note this only
 works (and makes sense) when the \code{by} variable is used.}
+
+\item{output}{A string representing the desired output. Choices include:
+\itemize{
+\item "gtsummary" A \link[gtsummary:gtsummary-package]{gtsummary::gtsummary} object.
+\item "flextable" A \link[flextable:flextable]{flextable::flextable} table with formatting applied to a gtsummary table.
+\item "rmarkdown" Raw flextable output for use in rmarkdown (see \code{\link[flextable:flextable_to_rmd]{flextable::flextable_to_rmd()}}
+for details). This is most suitable for running summarize in a loop or as list component.
+}}
 }
 \value{
 A \code{\link[gtsummary:tbl_summary]{gtsummary::tbl_summary()}} object representing the categorical
