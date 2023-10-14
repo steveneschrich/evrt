@@ -87,3 +87,22 @@ docx_add_subsection<-function(doc, header = "", text="", ft) {
 }
 
 
+#' Force table caption
+#'
+#' @description With flextables, captions do not print correctly. This forces
+#' the caption to print.
+#'
+#' @details When flextables are used in word documents, the captions from the
+#' quarto document do not render correctly. See
+#' (https://stackoverflow.com/questions/77167685/cross-references-and-captions-not-working-when-using-gt-in-quarto-with-word-outp)
+#' for details. The solution is to generate an empty html [knitr::kable()] table
+#' which acts as the table reference for quarto.
+#'
+#' @return
+#' @export
+#'
+#' @examples
+force_tbl_caption <- function() {
+  knitr::kable(x = NULL, output = "html")
+}
+
