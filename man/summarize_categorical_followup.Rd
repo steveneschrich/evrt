@@ -2,6 +2,9 @@
 % Please edit documentation in R/summarize_categorical_followup.R
 \name{summarize_categorical_followup}
 \alias{summarize_categorical_followup}
+\alias{summarize_categorical_followup_as_flextable}
+\alias{summarize_categorical_followup_as_gtsummary}
+\alias{summarize_categorical_followup_as_rmarkdown}
 \title{Create a categorical table with followup comments}
 \usage{
 summarize_categorical_followup(
@@ -15,6 +18,12 @@ summarize_categorical_followup(
   include_overall = FALSE,
   output = c("gtsummary", "flextable", "rmarkdown")
 )
+
+summarize_categorical_followup_as_flextable(...)
+
+summarize_categorical_followup_as_gtsummary(...)
+
+summarize_categorical_followup_as_rmarkdown(...)
 }
 \arguments{
 \item{x}{Labelled data frame containing all data in survey}
@@ -52,3 +61,12 @@ any additional free text responses in \code{followup} listed below the table.
 \description{
 Create a categorical table with followup comments
 }
+\section{Functions}{
+\itemize{
+\item \code{summarize_categorical_followup_as_flextable()}: Flextable output of summarized categorical table
+
+\item \code{summarize_categorical_followup_as_gtsummary()}: gtsummary output of summarized categorical table
+
+\item \code{summarize_categorical_followup_as_rmarkdown()}: rmarkdown output of summarized categorical table
+
+}}

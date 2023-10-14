@@ -2,6 +2,9 @@
 % Please edit documentation in R/summarize_comments.R
 \name{summarize_comments}
 \alias{summarize_comments}
+\alias{summarize_comments_as_flextable}
+\alias{summarize_comments_as_gtsummary}
+\alias{summarize_comments_as_rmarkdown}
 \title{Create a comment table}
 \usage{
 summarize_comments(
@@ -14,6 +17,12 @@ summarize_comments(
   output = c("gtsummary", "flextable", "rmarkdown"),
   statistic = ""
 )
+
+summarize_comments_as_flextable(...)
+
+summarize_comments_as_gtsummary(...)
+
+summarize_comments_as_rmarkdown(...)
 }
 \arguments{
 \item{x}{The data frame to summarize}
@@ -48,6 +57,15 @@ followed by all non-empty values, one per line.
 This is most useful as a way to summarize a question (or questions)
 that have free-text answers. This function just shows the responses.
 }
+\section{Functions}{
+\itemize{
+\item \code{summarize_comments_as_flextable()}: Flextable output of summarized comments table
+
+\item \code{summarize_comments_as_gtsummary()}: gtsummary output of summarized comments table
+
+\item \code{summarize_comments_as_rmarkdown()}: rmarkdown output of summarized comments table
+
+}}
 \examples{
 \dontrun{
 tibble::tibble("This is a question"=c("comment 1","comment 2", NA,"comment 3")) |>

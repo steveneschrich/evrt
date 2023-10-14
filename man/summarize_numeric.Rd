@@ -2,6 +2,9 @@
 % Please edit documentation in R/summarize_numeric.R
 \name{summarize_numeric}
 \alias{summarize_numeric}
+\alias{summarize_numeric_as_flextable}
+\alias{summarize_numeric_as_gtsummary}
+\alias{summarize_numeric_as_rmarkdown}
 \title{Summarize numeric variables}
 \usage{
 summarize_numeric(
@@ -14,6 +17,12 @@ summarize_numeric(
   include_overall = TRUE,
   output = c("gtsummary", "flextable", "rmarkdown")
 )
+
+summarize_numeric_as_flextable(...)
+
+summarize_numeric_as_gtsummary(...)
+
+summarize_numeric_as_rmarkdown(...)
 }
 \arguments{
 \item{x}{A data frame to summarize}
@@ -46,6 +55,15 @@ breakdown of \code{vars} from \code{x}.
 \description{
 Summarize numeric variables
 }
+\section{Functions}{
+\itemize{
+\item \code{summarize_numeric_as_flextable()}: Flextable output of summarized numeric table
+
+\item \code{summarize_numeric_as_gtsummary()}: gtsummary output of summarized numeric table
+
+\item \code{summarize_numeric_as_rmarkdown()}: rmarkdown output of summarized numeric table
+
+}}
 \examples{
 \dontrun{
 summarize_numeric(iris, vars=c("Petal.Length","Petal.Width"))

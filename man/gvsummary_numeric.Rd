@@ -7,7 +7,7 @@
 gvsummary_numeric(
   x,
   vars,
-  dictionary,
+  dictionary = NULL,
   by = NULL,
   header = "**Characteristic**",
   summary = "mean",
