@@ -91,8 +91,21 @@ summarize_categorical_followup <- function(x, vars, by = NULL,
 
 }
 
-
-
+#' @describeIn summarize_categorical_followup Flextable output of summarized categorical table
+#' @export
+summarize_categorical_followup_as_flextable <- function(...) {
+  summarize_categorical_followup(..., output = "flextable")
+}
+#' @describeIn summarize_categorical_followup gtsummary output of summarized categorical table
+#' @export
+summarize_categorical_followup_as_gtsummary <- function(...) {
+  summarize_categorical_followup(..., output = "gtsummary")
+}
+#' @describeIn summarize_categorical_followup rmarkdown output of summarized categorical table
+#' @export
+summarize_categorical_followup_as_rmarkdown <- function(...) {
+  summarize_categorical_followup(..., output = "rmarkdown")
+}
 #' Style flextable as a followup table
 #'
 #' @description Apply consistent styling to a follow up flextable

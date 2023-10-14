@@ -89,7 +89,21 @@ summarize_categorical<- function(x, vars,
   tbl
 }
 
-
+#' @describeIn summarize_categorical Flextable output of summarized categorical table
+#' @export
+summarize_categorical_as_flextable <- function(...) {
+  summarize_categorical(..., output = "flextable")
+}
+#' @describeIn summarize_categorical gtsummary output of summarized categorical table
+#' @export
+summarize_categorical_as_gtsummary <- function(...) {
+  summarize_categorical(..., output = "gtsummary")
+}
+#' @describeIn summarize_categorical rmarkdown output of summarized categorical table
+#' @export
+summarize_categorical_as_rmarkdown <- function(...) {
+  summarize_categorical(..., output = "rmarkdown")
+}
 
 #' Apply style to catgorical flextable
 #'

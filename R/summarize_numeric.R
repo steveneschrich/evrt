@@ -8,11 +8,11 @@
 #'
 #'
 #' Possibilities include
-#' - summarize_numeric: Create a summarized table of the question(s)
-#' - plot_numeric: Create a figure of the numeric responses
-#' - gvsummary_numeric: Create a flextable and plot of the numeric responses.
+#' - [summarize_numeric()]: Create a summarized table of the question(s)
+#' - [plot_numeric()]: Create a figure of the numeric responses
+#' - [gvsummary_numeric()]: Create a flextable and plot of the numeric responses.
 #'
-#' @name categorical
+#' @name numeric
 NULL
 
 
@@ -95,6 +95,22 @@ summarize_numeric <- function(x,
   }
 
   tbl
+}
+
+#' @describeIn summarize_numeric Flextable output of summarized numeric table
+#' @export
+summarize_numeric_as_flextable <- function(...) {
+  summarize_numeric(..., output = "flextable")
+}
+#' @describeIn summarize_numeric gtsummary output of summarized numeric table
+#' @export
+summarize_numeric_as_gtsummary <- function(...) {
+  summarize_numeric(..., output = "gtsummary")
+}
+#' @describeIn summarize_numeric rmarkdown output of summarized numeric table
+#' @export
+summarize_numeric_as_rmarkdown <- function(...) {
+  summarize_numeric(..., output = "rmarkdown")
 }
 
 

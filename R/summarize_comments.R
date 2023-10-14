@@ -80,6 +80,21 @@ summarize_comments <- function(x,
 }
 
 
+#' @describeIn summarize_comments Flextable output of summarized comments table
+#' @export
+summarize_comments_as_flextable <- function(...) {
+  summarize_comments(..., output = "flextable")
+}
+#' @describeIn summarize_comments gtsummary output of summarized comments table
+#' @export
+summarize_comments_as_gtsummary <- function(...) {
+  summarize_comments(..., output = "gtsummary")
+}
+#' @describeIn summarize_comments rmarkdown output of summarized comments table
+#' @export
+summarize_comments_as_rmarkdown <- function(...) {
+  summarize_comments(..., output = "rmarkdown")
+}
 #' Style flextable with sensible defaults
 #'
 #' @description Style a [flextable::flextable()] comments
