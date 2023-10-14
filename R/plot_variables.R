@@ -73,8 +73,12 @@ plot_categorical <- function(x, vars = colnames(x),
   })
 
   # Patchwork the plots together (one under the other)
-  p <- patchwork::wrap_plots(plot_list, ncol = 1)
-
+  if ( length(vars) > 1) {
+    p <- patchwork::wrap_plots(plot_list, ncol = 1, guides = "collect") &
+      ggplot2::theme(legend.position="top")
+  } else {
+    p <- plot_list[[1]]
+  }
   p
 
 }
