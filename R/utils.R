@@ -135,3 +135,5 @@ default_labels <- function(x, vars = colnames(x)) {
 as_flextable <- function(x) {
   gtsummary::as_flex_table(x)
 }
+
+
