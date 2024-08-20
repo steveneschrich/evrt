@@ -61,8 +61,8 @@ summarize_comments <- function(x,
       missing = "no",
       by = dplyr::all_of(by)
     ) |>
-    gtsummary::modify_header(update = list(label ~ header)) |>
-    gtsummary::modify_footnote(update = gtsummary::everything() ~ NA)
+    gtsummary::modify_header(label ~ header) |>
+    gtsummary::modify_footnote(gtsummary::everything() ~ NA)
 
   if ( !is.null(by) && include_overall )
     tbl <- gtsummary::add_overall(tbl, last = TRUE, col_label = "**Total** N = {N}")

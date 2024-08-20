@@ -77,7 +77,7 @@ summarize_categorical_followup <- function(x, vars, by = NULL,
                        group_header = group_headers) |>
     # Empty the groupname_col (header) since these aren't groups, just an
     # extension of the same thing.
-    gtsummary::modify_header(update = list(groupname_col ~ ""))
+    gtsummary::modify_header(groupname_col ~ "")
 
   # Decide on output: gtsummary, flextable or rmarkdown.
   if ( output == "flextable" || output == "rmarkdown") {

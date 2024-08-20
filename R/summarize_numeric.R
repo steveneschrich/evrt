@@ -77,7 +77,7 @@ summarize_numeric <- function(x,
     digits = list(everything() ~ ifelse(
       summary=="mean", c(2,0), c(0,0))
     )) |>
-    gtsummary::modify_header(update = list(label ~ header)) |>
+    gtsummary::modify_header(label ~ header) |>
     gtsummary::modify_footnote(label~glue::glue(
       "Levels: {paste(names(factor_levels),factor_levels, sep='=', collapse=', ')}"
     ))

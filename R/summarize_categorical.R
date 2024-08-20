@@ -72,7 +72,7 @@ summarize_categorical<- function(x, vars,
                          by=dplyr::all_of(by)
    ) |>
     # Change header to include header text
-    gtsummary::modify_header(update = list(label ~ header))
+    gtsummary::modify_header(label ~ header)
 
   # Add overall if needed
   if ( !is.null(by) && include_overall )
