@@ -44,6 +44,20 @@ summarize_choice <- function(x, vars = NULL, by = NULL, include_overall = TRUE,
   # Extract the details of the set of variables corresponding the input
   choice_set <- get_choices(x, vars)
 
+  # There is a problem when a choice has not selections (all 0's), gtsummary does
+  # not want to show the 1 breakdown (which is 0%). We have to do a few things to
+  # force the issue.
+  x <- dplyr::mutate(
+    x,
+    dplyr::across(
+      dplyr::all_of(choice_set$vars),
+      \(.x) {
+        factor(.x, levels=c("0","1")) |>
+          labelled::set_variable_labels(.labels=labelled::var_label(.x))
+      }
+    )
+  )
+
   tbl <- gtsummary::tbl_summary(
     x,
     include=dplyr::all_of(choice_set$vars),
@@ -55,7 +69,8 @@ summarize_choice <- function(x, vars = NULL, by = NULL, include_overall = TRUE,
       .f = \(x,y){
         as.formula(call("~",x,y))
       }
-    )
+    ),
+    value = list(dplyr::everything() ~ "1")
   ) |>
     gtsummary::modify_header(
       label = paste0("**", stringr::str_trim(choice_set$question), "**")
