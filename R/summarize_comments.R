@@ -55,10 +55,17 @@ summarize_comments <- function(x,
     statistic = "{n}"
 
   tbl <- x |>
-    gtsummary::tbl_summary(
+#    gtsummary::tbl_summary(
+#      include = dplyr::all_of(vars),
+#      statistic=list(gtsummary::all_categorical() ~ statistic),
+#      missing = "no",
+#      by = dplyr::all_of(by)
+#    ) |>
+    gtsummary::tbl_custom_summary(
       include = dplyr::all_of(vars),
-      statistic=list(gtsummary::all_categorical() ~ statistic),
-      missing = "no",
+      statistic = list(gtsummary::everything() ~ ""),
+      stat_fns = list(gtsummary::everything() ~ \(data,...){tibble::tibble(count=0)}),
+      missing="no",
       by = dplyr::all_of(by)
     ) |>
     gtsummary::modify_header(label ~ header) |>

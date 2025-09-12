@@ -33,6 +33,7 @@ plot_categorical <- function(x, vars = colnames(x),
     dplyr::across(dplyr::all_of(vars), \(.x) {fct_wrap(.x,width=wrap_length)})
   )
 
+
   # NB: Future. If length(vars)>1 and col is not a list of vectors, replicate the
   # col across length(vars), then we can use purrr::map2 to have unique colors per
   # variable.
@@ -67,7 +68,7 @@ plot_categorical <- function(x, vars = colnames(x),
       # not drop empty factors in the fill or the x axis bars.
       ggplot2::scale_fill_manual(values = pcol, drop = FALSE) +
       ggplot2::scale_x_discrete(drop=FALSE) +
-      ggplot2::xlab(xlabel) +
+      ggplot2::xlab(stringr::str_wrap(xlabel,width = 30)) +
       style_ggplot()
 
   })
@@ -160,16 +161,16 @@ plot_variables_as_numeric <- function(x,
   if (!is.null(by)) {
     g <- g +
       ggplot2::aes(fill = forcats::fct_rev(!!by)) +
-      ggplot2::geom_errorbar(width=0.2, size =1, position=ggplot2::position_dodge(width=0.9)) +
+      ggplot2::geom_errorbar(width=0.2, linewidth =1, position=ggplot2::position_dodge(width=0.9)) +
       ggplot2::geom_bar(stat="identity",position=ggplot2::position_dodge(width=0.9))
   }  else {
     g <- g +
-      ggplot2::geom_errorbar(width=0.2, size = 1) +
+      ggplot2::geom_errorbar(width=0.2, linewidth = 1) +
       ggplot2::geom_bar(stat = "identity", fill = col[1])
   }
 #c("#4F81BD", "#FAAB18","#868686FF","#CD534CFF")
   g<- g +
-    ggplot2::geom_hline(yintercept = 0, size = 1, colour="#333333") +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
     ggplot2::scale_fill_manual(values =  col) +#,
 #                               guide = ggplot2::guide_legend(reverse=TRUE)) +
     ggplot2::geom_vline(xintercept = threshold, linetype = "dashed") +
@@ -259,7 +260,7 @@ plot_threshold<- function(x, vars,
       ggplot2::geom_bar(stat="identity",position=ggplot2::position_dodge(width=0.9))
   }
   g<- g +
-    ggplot2::geom_hline(yintercept = 0, size = 1, colour="#333333") +
+    ggplot2::geom_hline(yintercept = 0, linewidth = 1, colour="#333333") +
     ggplot2::scale_fill_manual(values = col)+#,
 #                               guide = ggplot2::guide_legend(reverse=TRUE)) +
     # Set x scale as percentages (0-100%).
